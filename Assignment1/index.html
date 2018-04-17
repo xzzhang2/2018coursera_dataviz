@@ -47,8 +47,8 @@ var yAxis = d3.svg.axis().scale(y)
 
 // Define the line
 var priceline = d3.svg.line()
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.price); });
+    .x(function(d) { return x(d.Year); })
+    .y(function(d) { return y(d.Glob); });
     
 // Adds the svg canvas
 var svg = d3.select("body")
@@ -60,15 +60,15 @@ var svg = d3.select("body")
               "translate(" + margin.left + "," + margin.top + ")");
 
 // Get the data
-d3.csv("stocks.csv", function(error, data) {
+d3.csv("GISTEMPData2CSV.csv", function(error, data) {
     data.forEach(function(d) {
-		d.date = parseDate(d.date);
-		d.price = +d.price;
+		d.Year = parseDate(d.Year);
+		d.Glob = +d.Glob;
     });
 
     // Scale the range of the data
-    x.domain(d3.extent(data, function(d) { return d.date; }));
-    y.domain([0, d3.max(data, function(d) { return d.price; })]); 
+    x.domain(d3.extent(data, function(d) { return d.Year; }));
+    y.domain([0, d3.max(data, function(d) { return d.Glob; })]); 
 
     // Nest the entries by symbol
     var dataNest = d3.nest()
@@ -98,7 +98,9 @@ d3.csv("stocks.csv", function(error, data) {
 });
 
 </script>
+
+ - Disclaimer: this file is a test page. all the codes and the raw data (stock.csv) are froom: http://bl.ocks.org/d3noob/d8be922a10cb0b148cd5. This page is for my own learning purpose only. 
+
 </body>
 
- 
- - Disclaimer: this file is a test page. all the codes and the raw data (stock.csv) are froom: http://bl.ocks.org/d3noob/d8be922a10cb0b148cd5. This page is for my own learning purpose only. 
+

@@ -30,6 +30,7 @@ var valueline = d3.line()
     .x(function(d) { return x(d.Year); })
     .y(function(d) { return y(d.Glob); });
 
+
 // define the 2nd line
 var valueline2 = d3.line()
     .x(function(d) { return x(d.Year); })
@@ -47,7 +48,6 @@ var valueline3 = d3.line()
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
@@ -65,28 +65,30 @@ d3.csv("GISTEMPData2CSV.csv", function(error, data) {
 
   // Scale the range of the data
   x.domain(d3.extent(data, function(d) { return d.Year; }));
-  y.domain([0, d3.max(data, function(d) {
-      return Math.max(d.Glob, d.NHem); })]);
+  y.domain([0, d3.max(data, function(d) { return d.Glob; })]);
 
   // Add the valueline path.
   svg.append("path")
       .data([data])
       .attr("class", "line")
-      .attr("d", valueline);
+      .attr("d", valueline)
+      .attr('clip-path');
 
   // Add the valueline2 path.
   svg.append("path")
       .data([data])
       .attr("class", "line")
       .style("stroke", "red")
-      .attr("d", valueline2);
+      .attr("d", valueline2)
+      .attr('clip-path');
 
   // Add the valueline3 path.
   svg.append("path")
       .data([data])
       .attr("class", "line")
       .style("stroke", "green")
-      .attr("d", valueline3);
+      .attr("d", valueline3)
+      .attr('clip-path');
 
   // Add the X Axis
   svg.append("g")

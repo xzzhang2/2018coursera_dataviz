@@ -1,88 +1,108 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style> /* set the CSS */
- 
-body { font: 12px Arial;}
- 
-path { 
-  stroke: steelblue;
-  stroke-width: 2;
+
+.line {
   fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
 }
- 
-.axis path,
-.axis line {
-    fill: none;
-    stroke: grey;
-    stroke-width: 1;
-    shape-rendering: crispEdges;
-}
- 
+
 </style>
 <body>
- 
-<!-- load the d3.js library --> 
-<script src="http://d3js.org/d3.v3.min.js"></script>
- 
-<script>
- 
-// Set the dimensions of the canvas / graph
-var margin = {top: 30, right: 20, bottom: 30, left: 50},
-    width = 600 - margin.left - margin.right,
-    height = 270 - margin.top - margin.bottom;
- 
-// Set the ranges
-var x = d3.time.scale().range([0, width]);
-var y = d3.scale.linear().range([height, 0]);
- 
-// Define the axes
-var xAxis = d3.svg.axis().scale(x)
-    .orient("bottom").ticks(5);
- 
-var yAxis = d3.svg.axis().scale(y)
-    .orient("left").ticks(5);
- 
-// Define the line
-var valueline = d3.svg.line()
-    .x(function(d) { return x(d.Year); })
-    .y(function(d) { return y(d.Glob); })
 
-// Adds the svg canvas
-var svg = d3.select("body")
-    .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
- 
+<!-- load the d3.js library -->     
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+// set the ranges
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+
+
+// define the 1st line
+var valueline = d3.line()
+    .x(function(d) { return x(d.Year); })
+    .y(function(d) { return y(d.Glob); });
+
+// define the 2nd line
+var valueline2 = d3.line()
+    .x(function(d) { return x(d.Year); })
+    .y(function(d) { return y(d.NHem); });
+
+// define the 3rd line
+var valueline3 = d3.line()
+    .x(function(d) { return x(d.Year); })
+    .y(function(d) { return y(d.SHem); });
+
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
 // Get the data
 d3.csv("GISTEMPData2CSV.csv", function(error, data) {
-    data.forEach(function(d) {
-        d.Year = d.Year;
-        d.Glob = +d.Glob;
-    });
- 
-    // Scale the range of the data
-    x.domain(d3.extent(data, function(d) { return d.Year; }));
-    y.domain([0, d3.max(data, function(d) { return d.Glob; })]);
- 
-    // Add the valueline path.
-    svg.append("path")  
-        .attr("class", "line")
-        .attr("d", valueline(data));
- 
-    // Add the X Axis
-    svg.append("g")     
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
- 
-    // Add the Y Axis
-    svg.append("g")     
-        .attr("class", "y axis")
-        .call(yAxis);
- 
+  if (error) throw error;
+
+  // format the data
+  data.forEach(function(d) {
+      d.Year = d.Year;
+      d.Glob = +d.Glob;
+      d.NHem = +d.NHem;
+      d.SHem = +d.SHem;
+  });
+
+  // Scale the range of the data
+  x.domain(d3.extent(data, function(d) { return d.Year; }));
+  y.domain([0, d3.max(data, function(d) {
+      return Math.max(d.Glob, d.NHem); })]);
+
+  // Add the valueline path.
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("d", valueline);
+
+  // Add the valueline2 path.
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .style("stroke", "red")
+      .attr("d", valueline2);
+
+  // Add the valueline3 path.
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .style("stroke", "green")
+      .attr("d", valueline3);
+
+  // Add the X Axis
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  // Add the Y Axis
+  svg.append("g")
+      .call(d3.axisLeft(y));
+
 });
- 
+
 </script>
+
+ - Disclaimer: this page is for my own pratice purpose. The html codes are from https://bl.ocks.org/d3noob/4db972df5d7efc7d611255d1cc6f3c4f. The data were collected by NASA and publically accessible at   https://data.giss.nasa.gov/gistemp/.  For more resource, see http://www.d3noob.org/2012/12/setting-scales-domains-and-ranges-in.html
+
 </body>
+
+

@@ -31,9 +31,6 @@ var margin = {top: 30, right: 20, bottom: 30, left: 50},
     width = 600 - margin.left - margin.right,
     height = 270 - margin.top - margin.bottom;
  
-// Parse the date / time
-var parseDate = d3.time.format("%d-%b-%y").parse;
- 
 // Set the ranges
 var x = d3.time.scale().range([0, width]);
 var y = d3.scale.linear().range([height, 0]);
@@ -48,8 +45,8 @@ var yAxis = d3.svg.axis().scale(y)
 // Define the line
 var valueline = d3.svg.line()
     .x(function(d) { return x(d.Year); })
-    .y(function(d) { return y(d.Glob); });
-    
+    .y(function(d) { return y(d.Glob); })
+
 // Adds the svg canvas
 var svg = d3.select("body")
     .append("svg")
@@ -61,7 +58,7 @@ var svg = d3.select("body")
 // Get the data
 d3.csv("GISTEMPData2CSV.csv", function(error, data) {
     data.forEach(function(d) {
-        d.Year = parseDate(d.Year);
+        d.Year = d.Year;
         d.Glob = +d.Glob;
     });
  

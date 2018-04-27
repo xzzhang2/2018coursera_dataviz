@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="multiline.css">
+    <script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
+    <!--<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>-->
+</head>
+<body>
+<div class="chart-wrapper" id="chart-line1"></div>
+
+<script type="text/javascript">
+    d3.csv('GISTEMPData2CSV.csv', function(error, data) {
+    data.forEach(function (d) {
+        d.Year = +d.Year;
+        d.Glob = +d.Glob;
+        d.NHem = +d.NHem;
+        d.SHem = +d.SHem;
+    });
+
+    var chart = makeLineChart(data, 'Year', {
+        'Glob': {column: 'Glob'},
+        'NHem': {column: 'NHem'},
+        'SHem': {column: 'SHem'},
+    }, {xAxis: 'Years', yAxis: 'T'});
+    chart.bind("#chart-line1");
+    chart.render();
+
+});
+</script>
+<script src="multiline.js" charset="utf-8"></script>
+</body>
+
+
+
+<p>
+ - Disclaimer: this graph is for my own pratice purpose. The html codes are from https://bl.ocks.org/d3noob/4db972df5d7efc7d611255d1cc6f3c4f.  and http://bl.ocks.org/asielen/44ffca2877d0132572cb.  The data were collected by NASA and publically accessible at   https://data.giss.nasa.gov/gistemp/.  For more resource, see http://www.d3noob.org/2012/12/setting-scales-domains-and-ranges-in.html
+</p>
+
+</html>
+

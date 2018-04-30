@@ -13,13 +13,15 @@
     stroke-width: 3px;
   }
 
-  .node text { font: 12px sans-serif; }
+  .node text { font:12 sans-serif; }
 
   .link {
     fill: none;
     stroke: #ccc;
     stroke-width: 2px;
   }
+
+  .nodelabel text { font:15 sans-serif; }
   
     </style>
 
@@ -35,7 +37,7 @@
 <script>
 
 
-var width = 900,
+var width = 1000,
     height = 500;
 
 var svg = d3.select("body").append("svg")
@@ -74,6 +76,18 @@ d3.csv("VoiceChina_edgelist_100.csv", function(error, links) {
       .attr("r", 4.5)
       .call(force.drag);
 
+  // Create node labels. 
+  var nodelabels = svg.selectAll(".nodelabel") 
+       .data(nodes)
+       .enter()
+       .append("text")
+       .attr({"x":function(d){return d.x;},
+              "y":function(d){return d.y;},
+              "class":"nodelabel",
+              "fill":"#9900cc",
+              "stroke":"none"})
+       .call(force.drag) //this will add the dragging issue, see "var node"         
+       .text(function(d){return d.name;});
 
   // Start the force layout.
   force
@@ -90,7 +104,10 @@ d3.csv("VoiceChina_edgelist_100.csv", function(error, links) {
 
     node.attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
-  }
+
+    nodelabels.attr("x", function(d) { return d.x; }) 
+              .attr("y", function(d) { return d.y; });     
+   }
 
   function nodeByName(name) {
     return nodesByName[name] || (nodesByName[name] = {name: name});
@@ -99,7 +116,7 @@ d3.csv("VoiceChina_edgelist_100.csv", function(error, links) {
 
 </script>
 
-<p> This page is to practice visualizing network data in d3 from csv-based edgelist (see the dataset in this folder). The codes are from: https://bl.ocks.org/martinjc/871febe9277e731479384e39f84f1cf8  and  http://bl.ocks.org/emeeks/9441864. The song cover data is collected by Zhang (2017). </p> 
+<p> This page is to practice visualizing network data in d3 from csv-based edgelist (see the dataset in this folder). The codes are from: https://bl.ocks.org/martinjc/871febe9277e731479384e39f84f1cf8, http://bl.ocks.org/emeeks/9441864, http://bl.ocks.org/jhb/5955887, and http://bl.ocks.org/norrs/2883411. The song cover data is collected by Zhang (2017). </p> 
 <p> This graph indicates the song cover relationship among the contestants and original singers. For example, if contestant A sings a song from Beatles, there will be a link from A to Beatles. 
 <p> Obviously, this graph needs to improve because the node labels are not avaiable. But nevertheless, from eyeballing the graph one can clearly observe a "central-periphery" tendency between some famous singers-copies (clustering in the central areas) and some "alternative pairs" (drifting away in the margins). </p>
   
